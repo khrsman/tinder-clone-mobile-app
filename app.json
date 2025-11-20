@@ -37,12 +37,12 @@
           "dark": {
             "backgroundColor": "#ff6b6b"
           },
-           "imageWidth": 200
+          "imageWidth": 200
         }
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
+      "typedRoutes": false,
       "reactCompiler": true
     },
     "extra": {
