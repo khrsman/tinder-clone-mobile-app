@@ -2,21 +2,18 @@ import { useState } from 'react';
 import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { Opponent } from '../../data/opponents';
 import { PhotoIndicator } from '../molecules/PhotoIndicator';
+import { useRecoilValue } from 'recoil';
+import { currentOpponentSelector, useCardsActions } from '../../state/recoil';
 
-type Props = {
-  opponent: Opponent;
-  onSwipeLeft?: (id: string) => void;
-  onSwipeRight?: (id: string) => void;
-};
-
-export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
+export function SwipeCard() {
   const [photoIdx, setPhotoIdx] = useState(0);
   const { width } = useWindowDimensions();
   const translateX = useSharedValue(0);
   const rotate = useSharedValue(0);
   const exited = useSharedValue(false);
+  const opponent = useRecoilValue(currentOpponentSelector);
+  const { handleLikes, handleThisLike } = useCardsActions();
 
   const style = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }, { rotate: `${rotate.value}deg` }],
@@ -32,7 +29,7 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
       if (translateX.value > threshold) {
         exited.value = true;
         translateX.value = withTiming(width, { duration: 220 }, (finished) => {
-          if (finished && onSwipeRight) runOnJS(onSwipeRight)(opponent.id);
+          if (finished) runOnJS(handleThisLike)();
           translateX.value = 0;
           rotate.value = 0;
           exited.value = false;
@@ -40,7 +37,7 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
       } else if (translateX.value < -threshold) {
         exited.value = true;
         translateX.value = withTiming(-width, { duration: 220 }, (finished) => {
-          if (finished && onSwipeLeft) runOnJS(onSwipeLeft)(opponent.id);
+          if (finished) runOnJS(handleLikes)();
           translateX.value = 0;
           rotate.value = 0;
           exited.value = false;
@@ -59,19 +56,22 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
     });
 
   const tap = Gesture.Tap().onEnd((e) => {
-    // 'worklet';
-    // const x = e.x;
-    // if (x > width / 2) {
-    //   runOnJS(goNext)();
-    // } else {
-    //   runOnJS(goPrev)();
-    // }
+    'worklet';
+    const x = e.x;
+    if (!opponent) return;
+    if (x > width / 2) {
+      runOnJS(setPhotoIdx)((p: number) => (p + 1) % opponent.photos.length);
+    } else {
+      runOnJS(setPhotoIdx)((p: number) => (p - 1 + opponent.photos.length) % opponent.photos.length);
+    }
   });
 
   return (
     <GestureDetector gesture={Gesture.Simultaneous(pan, tap)}>
       <Animated.View style={[styles.card, style]}>
-        <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
+        {opponent ? (
+          <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
+        ) : null}
         <View style={styles.overlay} />
          {/* <Pressable
         style={StyleSheet.absoluteFill}
@@ -84,17 +84,21 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
           }
         }}
       /> */}
-        <View style={styles.topIndicator}>
-          <PhotoIndicator count={opponent.photos.length} active={photoIdx} />
-        </View>
-        <View style={styles.info}>
-          <Text style={styles.badge}>{opponent.bio}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={styles.name}>{opponent.name} {opponent.age}</Text>
-            {opponent.verified ? <Text style={styles.verified}>✓</Text> : null}
-          </View>
-          <Text style={styles.distance}>• {opponent.distanceKm} KM Location</Text>
-        </View>
+        {opponent ? (
+          <>
+            <View style={styles.topIndicator}>
+              <PhotoIndicator count={opponent.photos.length} active={photoIdx} />
+            </View>
+            <View style={styles.info}>
+              <Text style={styles.badge}>{opponent.bio}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <Text style={styles.name}>{opponent.name} {opponent.age}</Text>
+                {opponent.verified ? <Text style={styles.verified}>✓</Text> : null}
+              </View>
+              <Text style={styles.distance}>• {opponent.distanceKm} KM Location</Text>
+            </View>
+          </>
+        ) : null}
       </Animated.View>
     </GestureDetector>
   );

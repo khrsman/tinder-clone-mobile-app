@@ -1,35 +1,19 @@
 import { StyleSheet, View } from 'react-native';
+import { useRecoilValue } from 'recoil';
 import { ActionBar } from '../../components/organisms/ActionBar';
 import { SwipeCard } from '../../components/organisms/SwipeCard';
-import { useLikes } from '../../context/likes';
-import { opponents } from '../../data/opponents';
+import { currentOpponentSelector, useCardsActions } from '../../state/recoil';
 
 export default function Main() {
-  const { like, undo, index, setIndex } = useLikes();
-
-  const current = opponents[index];
-
-    const handleLeft = () => {
-    if (current) like(current.id);
-    setIndex((i) => Math.min(opponents.length - 1, i + 1));
-  };
-  const handleRight = () => {    
-    if (current) like(current.id);
-    setIndex((i) => Math.min(opponents.length - 1, i + 1));
-  };
-  const handleUndo = () => {
-    undo();
-    setIndex(0);
-  };
+  const current = useRecoilValue(currentOpponentSelector);
+  const { handleLikes, handleThisLike, undo } = useCardsActions();
 
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
-        {current ? (
-          <SwipeCard opponent={current} onSwipeLeft={handleLeft} onSwipeRight={handleRight} />
-        ) : null}
+        {current ? <SwipeCard /> : null}
         <View style={styles.floatingBar}>
-          <ActionBar onUndo={handleUndo} onCancel={handleLeft} onLike={handleRight} />
+          <ActionBar onUndo={undo} onCancel={handleLikes} onLike={handleThisLike} />
         </View>
       </View>
     </View>
