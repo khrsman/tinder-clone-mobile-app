@@ -21,7 +21,7 @@ export default function Main() {
       </View>
       <View style={[styles.cardContainer, { width: contentWidth, alignSelf: 'center' }]}>
         {current ? <SwipeCard /> : null}
-        <View style={[styles.floatingBar, { width: contentWidth, alignSelf: 'center', bottom: insets.bottom + 16 }]}>
+        <View style={[styles.floatingBar, { width: contentWidth, alignSelf: 'center', bottom: insets.bottom + 10 }]}>
           <ActionBar onUndo={undo} onCancel={handleLikes} onLike={handleThisLike} />
         </View>
       </View>
