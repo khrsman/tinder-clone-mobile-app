@@ -1,4 +1,5 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -78,7 +79,18 @@ export function SwipeCard() {
         {opponent ? (
           <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
         ) : null}
-        <View style={[styles.overlay, { height: overlayHeight }]} />
+          <LinearGradient
+              colors={['#000000ff', '#000000cc', '#00000066', '#00000000']}
+              start={{ x: 0.5, y: 1 }}   // mulai dari bawah
+              end={{ x: 0.5, y: 0 }}     // ke atas
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: 0,
+                height: 200,
+              }}
+            />
         <Animated.View style={[styles.like, likeStyle]} pointerEvents="none">
           <Text style={styles.likeText}>LIKE</Text>
         </Animated.View>
@@ -135,7 +147,7 @@ const styles = StyleSheet.create({
   nope: { position: 'absolute', top: 28, right: 16, borderWidth: 8, borderColor: '#ff6b6b', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10 },
   nopeText: { color: '#ff6b6b', fontSize: 34, fontWeight: '900', letterSpacing: 3 },
   topIndicator: { position: 'absolute', top: 8, left: 0, right: 0 },
-  info: { position: 'absolute', bottom: 20, left: 16, right: 16, gap: 6, marginBottom: 30 },
+  info: { position: 'absolute', bottom: 20, left: 16, right: 16, gap: 6, marginBottom: 20 },
   badge: { alignSelf: 'flex-start', backgroundColor: '#b6dfb6', color: '#2a5a2a', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 14 },
   name: { color: '#fff', fontSize: 28, fontWeight: '700' },
   verified: { color: '#6bd1ff', fontSize: 20 },
