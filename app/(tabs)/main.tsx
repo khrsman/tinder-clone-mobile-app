@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActionBar } from '../../components/organisms/ActionBar';
+import { SwipeCard } from '../../components/organisms/SwipeCard';
 import { useLikes } from '../../context/likes';
 import { opponents } from '../../data/opponents';
 
@@ -18,6 +19,9 @@ export default function Main() {
 
   return (
     <View style={styles.container}>
+      {current ? (
+        <SwipeCard opponent={current} onSwipeLeft={handleLeft} onSwipeRight={handleRight} />
+      ) : null}
       <ActionBar onUndo={undo} onCancel={handleLeft} onLike={handleRight} />
     </View>
   );
