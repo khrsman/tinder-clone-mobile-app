@@ -1,31 +1,39 @@
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRecoilValue } from 'recoil';
 import { ActionBar } from '../../components/organisms/ActionBar';
-
-import { useLikes } from '../../context/likes';
-import { opponents } from '../../data/opponents';
-
+import { SwipeCard } from '../../components/organisms/SwipeCard';
+import { currentOpponentSelector, useCardsActions } from '../../state/recoil';
 
 export default function Main() {
-  const [index, setIndex] = useState(0);
-  const { like, undo } = useLikes();
-
-  const current = opponents[index];
-
-  const handleLeft = () => setIndex((i) => Math.min(opponents.length - 1, i + 1));
-  const handleRight = () => {
-    like(current.id);
-    setIndex((i) => Math.min(opponents.length - 1, i + 1));
-  };
+  const current = useRecoilValue(currentOpponentSelector);
+  const { handleLikes, handleThisLike, undo } = useCardsActions();
+  const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const contentWidth = Math.min(width - 32, 520);
 
   return (
-    <View style={styles.container}>
-    
-      <ActionBar onUndo={undo} onCancel={handleLeft} onLike={handleRight} />
-    </View>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.header}>
+        <View style={styles.brandRow}>
+          <Image source={require('../../assets/images/tinderLogo.png')} style={styles.brandLogo} resizeMode="contain" />
+        </View>
+      </View>
+      <View style={[styles.cardContainer, { width: contentWidth, alignSelf: 'center' }]}>
+        {current ? <SwipeCard /> : null}
+        <View style={[styles.floatingBar, { width: contentWidth, alignSelf: 'center', bottom: insets.bottom + 16 }]}>
+          <ActionBar onUndo={undo} onCancel={handleLikes} onLike={handleThisLike} />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, gap: 12, backgroundColor: '#f5f5f7' },
+  container: { flex: 1, padding: 16, backgroundColor: '#f5f5f7' },
+  header: { paddingTop: 8, paddingBottom: 12, alignItems: 'center' },
+  brandRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  brandLogo: { width: 120, height: 25, marginVertical: 10 },
+  cardContainer: { flex: 1, borderRadius: 16, overflow: 'hidden' },
+  floatingBar: { position: 'absolute', left: 0, right: 0 },
 });
