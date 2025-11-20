@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { Opponent } from '../../data/opponents';
 import { PhotoIndicator } from '../molecules/PhotoIndicator';
 
@@ -35,22 +35,22 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
       rotate.value = translateX.value / 20;
     })
     .onEnd(() => {
-      const threshold = width * 0.25;
-      console.log(threshold);
-      
+      const threshold = width * 0.40;
       if (translateX.value > threshold) {
-        exited.value = true;
-        translateX.value = withTiming(width, { duration: 220 }, (finished) => {
-          if (finished && onSwipeRight) runOnJS(onSwipeRight)(opponent.id);
-        });
+        console.log('right');
+      //   exited.value = true;
+      //   translateX.value = withTiming(width, { duration: 220 }, (finished) => {
+      //     if (finished && onSwipeRight) runOnJS(onSwipeRight)(opponent.id);
+      //   });
       } else if (translateX.value < -threshold) {
-        exited.value = true;
-        translateX.value = withTiming(-width, { duration: 220 }, (finished) => {
-          if (finished && onSwipeLeft) runOnJS(onSwipeLeft)(opponent.id);
-        });
-      } else {
-        translateX.value = withSpring(0);
-        rotate.value = withSpring(0);
+       console.log('left');
+      //   exited.value = true;
+      //   translateX.value = withTiming(-width, { duration: 220 }, (finished) => {
+      //     if (finished && onSwipeLeft) runOnJS(onSwipeLeft)(opponent.id);
+      //   });
+      // } else {
+      //   translateX.value = withSpring(0);
+      //   rotate.value = withSpring(0);
       }
     })
     .onFinalize(() => {
@@ -76,6 +76,17 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
       <Animated.View style={[styles.card, style]}>
         <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
         <View style={styles.overlay} />
+         {/* <Pressable
+        style={StyleSheet.absoluteFill}
+        onPressIn={(e) => {
+          const x = e.nativeEvent.locationX;
+          if (x > width / 2) {
+            setPhotoIdx((p) => (p + 1) % opponent.photos.length);
+          } else {
+            setPhotoIdx((p) => (p - 1 + opponent.photos.length) % opponent.photos.length);
+          }
+        }}
+      /> */}
         <View style={styles.topIndicator}>
           <PhotoIndicator count={opponent.photos.length} active={photoIdx} />
         </View>
