@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { PhotoIndicator } from '../molecules/PhotoIndicator';
 import { useRecoilValue } from 'recoil';
 import { currentOpponentSelector, useCardsActions } from '../../state/recoil';
+import { PhotoIndicator } from '../molecules/PhotoIndicator';
 
 export function SwipeCard() {
   const [photoIdx, setPhotoIdx] = useState(0);
@@ -19,7 +19,7 @@ export function SwipeCard() {
     transform: [{ translateX: translateX.value }, { rotate: `${rotate.value}deg` }],
   }));
 
-  const pan = Gesture.Pan()
+  const pan = Gesture.Pan().minDistance(12)
     .onUpdate((e) => {
       translateX.value = e.translationX;
       rotate.value = translateX.value / 20;
@@ -55,35 +55,30 @@ export function SwipeCard() {
       exited.value = false;
     });
 
-  const tap = Gesture.Tap().onEnd((e) => {
-    'worklet';
-    const x = e.x;
-    if (!opponent) return;
-    if (x > width / 2) {
-      runOnJS(setPhotoIdx)((p: number) => (p + 1) % opponent.photos.length);
-    } else {
-      runOnJS(setPhotoIdx)((p: number) => (p - 1 + opponent.photos.length) % opponent.photos.length);
-    }
-  });
+
+  useEffect(() => {
+    setPhotoIdx(0);
+  }, [opponent?.id]);
 
   return (
-    <GestureDetector gesture={Gesture.Simultaneous(pan, tap)}>
+    <GestureDetector gesture={pan}>
       <Animated.View style={[styles.card, style]}>
         {opponent ? (
           <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
         ) : null}
         <View style={styles.overlay} />
-         {/* <Pressable
-        style={StyleSheet.absoluteFill}
-        onPressIn={(e) => {
-          const x = e.nativeEvent.locationX;
-          if (x > width / 2) {
-            setPhotoIdx((p) => (p + 1) % opponent.photos.length);
-          } else {
-            setPhotoIdx((p) => (p - 1 + opponent.photos.length) % opponent.photos.length);
-          }
-        }}
-      /> */}
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPressIn={(e) => {
+            if (!opponent) return;
+            const x = e.nativeEvent.locationX;
+            if (x > width / 2) {
+              setPhotoIdx((p) => (p + 1) % opponent.photos.length);
+            } else {
+              setPhotoIdx((p) => (p - 1 + opponent.photos.length) % opponent.photos.length);
+            }
+          }}
+        />
         {opponent ? (
           <>
             <View style={styles.topIndicator}>
