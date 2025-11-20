@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.khrsman.tinderclone"
     },
     "web": {
       "output": "static",
@@ -30,12 +31,11 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "image": "./assets/splash/splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#ff6b6b",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#ff6b6b"
           }
         }
       ]
@@ -43,6 +43,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2e85d9e1-486a-49bf-9002-d57d26b1dab5"
+      }
     }
   }
 }
