@@ -1,0 +1,1 @@
+This will be a repository for a react native tinder clone app project for interview purposes.
