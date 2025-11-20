@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActionBar } from '../../components/organisms/ActionBar';
 import { SwipeCard } from '../../components/organisms/SwipeCard';
@@ -6,13 +5,15 @@ import { useLikes } from '../../context/likes';
 import { opponents } from '../../data/opponents';
 
 export default function Main() {
-  const [index, setIndex] = useState(0);
-  const { like, undo } = useLikes();
+  const { like, undo, index, setIndex } = useLikes();
 
   const current = opponents[index];
 
-  const handleLeft = () => setIndex((i) => Math.min(opponents.length - 1, i + 1));
-  const handleRight = () => {
+    const handleLeft = () => {
+    if (current) like(current.id);
+    setIndex((i) => Math.min(opponents.length - 1, i + 1));
+  };
+  const handleRight = () => {    
     if (current) like(current.id);
     setIndex((i) => Math.min(opponents.length - 1, i + 1));
   };

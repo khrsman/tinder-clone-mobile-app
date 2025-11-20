@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import { Opponent } from '../../data/opponents';
 import { PhotoIndicator } from '../molecules/PhotoIndicator';
 
@@ -22,35 +22,32 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
     transform: [{ translateX: translateX.value }, { rotate: `${rotate.value}deg` }],
   }));
 
-  const goNext = () => {
-    setPhotoIdx((p) => (p + 1) % opponent.photos.length);
-  };
-  const goPrev = () => {
-    setPhotoIdx((p) => (p - 1 + opponent.photos.length) % opponent.photos.length);
-  };
-
   const pan = Gesture.Pan()
     .onUpdate((e) => {
       translateX.value = e.translationX;
       rotate.value = translateX.value / 20;
     })
     .onEnd(() => {
-      const threshold = width * 0.40;
+      const threshold = width * 0.25;
       if (translateX.value > threshold) {
-        console.log('right');
-      //   exited.value = true;
-      //   translateX.value = withTiming(width, { duration: 220 }, (finished) => {
-      //     if (finished && onSwipeRight) runOnJS(onSwipeRight)(opponent.id);
-      //   });
+        exited.value = true;
+        translateX.value = withTiming(width, { duration: 220 }, (finished) => {
+          if (finished && onSwipeRight) runOnJS(onSwipeRight)(opponent.id);
+          translateX.value = 0;
+          rotate.value = 0;
+          exited.value = false;
+        });
       } else if (translateX.value < -threshold) {
-       console.log('left');
-      //   exited.value = true;
-      //   translateX.value = withTiming(-width, { duration: 220 }, (finished) => {
-      //     if (finished && onSwipeLeft) runOnJS(onSwipeLeft)(opponent.id);
-      //   });
-      // } else {
-      //   translateX.value = withSpring(0);
-      //   rotate.value = withSpring(0);
+        exited.value = true;
+        translateX.value = withTiming(-width, { duration: 220 }, (finished) => {
+          if (finished && onSwipeLeft) runOnJS(onSwipeLeft)(opponent.id);
+          translateX.value = 0;
+          rotate.value = 0;
+          exited.value = false;
+        });
+      } else {
+        translateX.value = withSpring(0);
+        rotate.value = withSpring(0);
       }
     })
     .onFinalize(() => {
