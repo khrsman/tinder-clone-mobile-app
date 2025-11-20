@@ -1,3 +1,4 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -90,7 +91,10 @@ export function SwipeCard() {
                 <Text style={styles.name}>{opponent.name} {opponent.age}</Text>
                 {opponent.verified ? <Text style={styles.verified}>✓</Text> : null}
               </View>
-              <Text style={styles.distance}>• {opponent.distanceKm} KM Location</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <MaterialIcons name="location-on" size={14} color="#ddd" />
+                <Text style={styles.distance}>{opponent.distanceKm} KM Location</Text>
+              </View>
             </View>
           </>
         ) : null}
