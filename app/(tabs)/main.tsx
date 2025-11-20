@@ -19,14 +19,20 @@ export default function Main() {
 
   return (
     <View style={styles.container}>
-      {current ? (
-        <SwipeCard opponent={current} onSwipeLeft={handleLeft} onSwipeRight={handleRight} />
-      ) : null}
-      <ActionBar onUndo={undo} onCancel={handleLeft} onLike={handleRight} />
+      <View style={styles.cardContainer}>
+        {current ? (
+          <SwipeCard opponent={current} />
+        ) : null}
+        <View style={styles.floatingBar}>
+          <ActionBar onUndo={undo} onCancel={handleLeft} onLike={handleRight} />
+        </View>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, gap: 12, backgroundColor: '#f5f5f7' },
+  container: { flex: 1, padding: 16, backgroundColor: '#f5f5f7' },
+  cardContainer: { flex: 1, borderRadius: 16, overflow: 'hidden' },
+  floatingBar: {  top: -30 },
 });

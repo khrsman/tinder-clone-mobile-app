@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { Opponent } from '../../data/opponents';
 import { PhotoIndicator } from '../molecules/PhotoIndicator';
 
@@ -10,36 +9,12 @@ type Props = {
   onSwipeRight?: (id: string) => void;
 };
 
-export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
-  const translateX = useSharedValue(0);
-  const rotate = useSharedValue(0);
+export function SwipeCard({ opponent}: Props) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const { width } = useWindowDimensions();
 
-  const style = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }, { rotate: `${rotate.value}deg` }],
-  }));
-
-  const handleRelease = () => {
-    if (translateX.value > 120) {
-      if (onSwipeRight) runOnJS(onSwipeRight)(opponent.id);
-    } else if (translateX.value < -120) {
-      if (onSwipeLeft) runOnJS(onSwipeLeft)(opponent.id);
-    } else {
-      translateX.value = withSpring(0);
-      rotate.value = withSpring(0);
-    }
-  };
-
   return (
-    <Animated.View style={[styles.card, style]}
-      onTouchMove={(e) => {
-        const dx = e.nativeEvent.pageX - e.nativeEvent.locationX;
-        translateX.value = dx / 4;
-        rotate.value = translateX.value / 20;
-      }}
-      onTouchEnd={handleRelease}
-    >
+    <View style={[styles.card]}>
       <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
       <View style={styles.overlay} />
       <Pressable
@@ -64,7 +39,7 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
         </View>
         <Text style={styles.distance}>• {opponent.distanceKm} KM Location</Text>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
