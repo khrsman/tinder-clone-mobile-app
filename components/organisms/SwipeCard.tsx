@@ -20,6 +20,16 @@ export function SwipeCard() {
     transform: [{ translateX: translateX.value }, { rotate: `${rotate.value}deg` }],
   }));
 
+  const likeStyle = useAnimatedStyle(() => ({
+    opacity: translateX.value > 0 ? Math.min(1, Math.abs(translateX.value) / (width * 0.4)) : 0,
+    transform: [{ rotate: '-12deg' }],
+  }));
+
+  const nopeStyle = useAnimatedStyle(() => ({
+    opacity: translateX.value < 0 ? Math.min(1, Math.abs(translateX.value) / (width * 0.4)) : 0,
+    transform: [{ rotate: '12deg' }],
+  }));
+
   const pan = Gesture.Pan().minDistance(12)
     .onUpdate((e) => {
       translateX.value = e.translationX;
@@ -68,6 +78,12 @@ export function SwipeCard() {
           <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
         ) : null}
         <View style={styles.overlay} />
+        <Animated.View style={[styles.like, likeStyle]} pointerEvents="none">
+          <Text style={styles.likeText}>LIKE</Text>
+        </Animated.View>
+        <Animated.View style={[styles.nope, nopeStyle]} pointerEvents="none">
+          <Text style={styles.nopeText}>NOPE</Text>
+        </Animated.View>
         <Pressable
           style={StyleSheet.absoluteFill}
           onPressIn={(e) => {
@@ -113,6 +129,10 @@ const styles = StyleSheet.create({
   },
   image: { width: '100%', height: '100%' },
   overlay: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 180, backgroundColor: '#00000066' },
+  like: { position: 'absolute', top: 28, left: 16, borderWidth: 8, borderColor: '#0fbf7d', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10 },
+  likeText: { color: '#0fbf7d', fontSize: 34, fontWeight: '900', letterSpacing: 3 },
+  nope: { position: 'absolute', top: 28, right: 16, borderWidth: 8, borderColor: '#ff6b6b', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10 },
+  nopeText: { color: '#ff6b6b', fontSize: 34, fontWeight: '900', letterSpacing: 3 },
   topIndicator: { position: 'absolute', top: 8, left: 0, right: 0 },
   info: { position: 'absolute', bottom: 20, left: 16, right: 16, gap: 6 },
   badge: { alignSelf: 'flex-start', backgroundColor: '#b6dfb6', color: '#2a5a2a', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 14 },
