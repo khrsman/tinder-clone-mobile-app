@@ -16,15 +16,19 @@ export default function Main() {
     if (current) like(current.id);
     setIndex((i) => Math.min(opponents.length - 1, i + 1));
   };
+  const handleUndo = () => {
+    undo();
+    setIndex(0);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.cardContainer}>
         {current ? (
-          <SwipeCard opponent={current} />
+          <SwipeCard opponent={current} onSwipeLeft={handleLeft} onSwipeRight={handleRight} />
         ) : null}
         <View style={styles.floatingBar}>
-          <ActionBar onUndo={undo} onCancel={handleLeft} onLike={handleRight} />
+          <ActionBar onUndo={handleUndo} onCancel={handleLeft} onLike={handleRight} />
         </View>
       </View>
     </View>
