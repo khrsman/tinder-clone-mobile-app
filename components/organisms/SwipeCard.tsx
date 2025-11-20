@@ -1,4 +1,3 @@
-import { Link } from 'expo-router';
 import { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -64,9 +63,6 @@ export function SwipeCard({ opponent, onSwipeLeft, onSwipeRight }: Props) {
           {opponent.verified ? <Text style={styles.verified}>✓</Text> : null}
         </View>
         <Text style={styles.distance}>• {opponent.distanceKm} KM Location</Text>
-        <Link href={{ pathname: '/opponent/[id]' as any, params: { id: opponent.id } }}>
-          <Text style={styles.link}>View photos</Text>
-        </Link>
       </View>
     </Animated.View>
   );
@@ -76,7 +72,8 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     overflow: 'hidden',
-    height: 520,
+    flex: 1,
+    minHeight: 750,
     backgroundColor: '#000',
   },
   image: { width: '100%', height: '100%' },
