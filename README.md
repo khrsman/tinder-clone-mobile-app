@@ -53,7 +53,9 @@ Tech & libraries
 
 
 Screenshots
-![Screenshot 1](assets/screenshots/Screenshot1.png)
-![Screenshot 2](assets/screenshots/Screenshot2.png)
-![Screenshot 3](assets/screenshots/Screenshot3.png)
-![Screenshot 4](assets/screenshots/Screenshot4.png)
+<p>
+  <img src="assets/screenshots/Screenshot1.png" width="260" />
+  <img src="assets/screenshots/Screenshot2.png" width="260" />
+  <img src="assets/screenshots/Screenshot3.png" width="260" />
+  <img src="assets/screenshots/Screenshot4.png" width="260" />
+</p>
