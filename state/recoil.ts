@@ -31,11 +31,35 @@ export function useCardsActions() {
   const setLikedIds = useSetRecoilState(likedIdsAtom);
   const current = useRecoilValue(currentOpponentSelector);
   const oppList = useRecoilValue(opponentsAtom);
+  const idx = useRecoilValue(indexAtom);
 
   const like = (id: number) => setLikedIds((prev) => [...prev, id]);
+  async function sendRewind() {
+    const rawBase = process.env.BASE_URL ?? (Constants.expoConfig?.extra as any)?.BASE_URL as string;
+    const host = String(rawBase || '').trim().replace(/^[`'"\s]+|[`'"\s]+$/g, '').replace(/\/+$/, '');
+    const url = `${host}/api/likes/rewind`;
+    const payload = { user_id: 1 };
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        console.error('rewind_api_error', { status: res.status, url, payload, body });
+      }
+    } catch (error) {
+      console.error('rewind_api_exception', { url, payload, error: String(error) });
+    }
+  }
+
   const undo = () => {
-    setLikedIds((prev) => prev.slice(0, -1));
-    setIndex(0);
+    const prevIdx = Math.max(idx - 1, 0);
+    const prevOpponent = oppList[prevIdx];
+    if (prevOpponent) setLikedIds((prev) => prev.filter((x) => x !== prevOpponent.id));
+    setIndex(prevIdx);
+    sendRewind();
   };
   const remove = (id: number) => setLikedIds((prev) => prev.filter((x) => x !== id));
 
