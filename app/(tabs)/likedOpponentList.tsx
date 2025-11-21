@@ -2,12 +2,13 @@ import { Image, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRecoilValue } from 'recoil';
 import { StaticCard } from '../../components/organisms/StaticCard';
-import { Opponent, opponents } from '../../data/opponents';
-import { likedIdsAtom } from '../../state/recoil';
+import { Opponent } from '../../state/recoil';
+import { likedIdsAtom, opponentsAtom } from '../../state/recoil';
 
 export default function Main() {
 const likedIds = useRecoilValue(likedIdsAtom);
-const liked = opponents.filter((o) => likedIds.includes(o.id));
+const allOpponents = useRecoilValue(opponentsAtom);
+const liked = allOpponents.filter((o) => likedIds.includes(o.id));
 const { width } = useWindowDimensions();
 const contentWidth = Math.min(width - 32, 520);   
 const cardHeight = Math.round(width * 1.6);

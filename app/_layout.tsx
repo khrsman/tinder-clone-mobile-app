@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import Constants from 'expo-constants';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -8,7 +9,10 @@ import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { Opponent, opponentsAtom } from '../state/recoil';
-const BASE_URL = 'http://192.168.1.5:8001/api/people';
+
+const BASE_URL = process.env.BASE_URL ?? (Constants.expoConfig?.extra as any)?.BASE_URL as string;
+const url = `${BASE_URL}/api/people`; 
+
 type PeopleItem = { id: string; name: string; age: number; bio: string; distance: number; photos: string[] };
 function cleanUrl(u: string) { return u.trim().replace(/^[`'"\s]+|[`'"\s]+$/g, ''); }
 function mapToOpponents(items: PeopleItem[]): Opponent[] {
@@ -55,7 +59,7 @@ function extractItems(json: any): PeopleItem[] {
 }
 
 async function fetchPeople(): Promise<Opponent[]> {
-  const res = await fetch(BASE_URL, { headers: { Accept: 'application/json' } });
+  const res = await fetch(url, { headers: { Accept: 'application/json' } });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
   const items = extractItems(json);
