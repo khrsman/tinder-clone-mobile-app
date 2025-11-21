@@ -2,17 +2,17 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { Opponent } from '../../data/opponents';
+import { Opponent } from '../../state/recoil';
 import { PhotoIndicator } from '../molecules/PhotoIndicator';
 
-export function StaticCard({ opponent, height }: { opponent: Opponent; height?: number }) {
+export function StaticCard({ opponent }: { opponent: Opponent }) {
   const [photoIdx, setPhotoIdx] = useState(0);
-  const { width, height: screenH } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const overlayHeight = Math.max(150, Math.round(width * 0.22));
-  const cardHeight = height ?? screenH;
+  const cardHeight = Math.round(width * 1.3);
 
   return (
-    <View style={[styles.card, { height: cardHeight }]}>      
+    <View style={[styles.card]}>      
       <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
       <LinearGradient
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.9)']}
