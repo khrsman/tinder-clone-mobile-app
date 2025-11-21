@@ -67,8 +67,6 @@ export function useCardsActions() {
     const BASE_URL = process.env.BASE_URL ?? (Constants.expoConfig?.extra as any)?.BASE_URL as string;
     const url = `${BASE_URL}/api/likes`; 
     const payload = { people_id: peopleId, status, user_id: 1 };
-    console.log(url);
-    console.log(payload);
     try {
       const res = await fetch(url, {
         method: 'POST',
