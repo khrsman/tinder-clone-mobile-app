@@ -1,9 +1,9 @@
-import { Image, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Image, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRecoilValue } from 'recoil';
 import { StaticCard } from '../../components/organisms/StaticCard';
-import { Opponent } from '../../state/recoil';
-import { likedIdsAtom, opponentsAtom } from '../../state/recoil';
+import { Opponent, likedIdsAtom, opponentsAtom } from '../../state/recoil';
 
 export default function Main() {
 const likedIds = useRecoilValue(likedIdsAtom);
@@ -20,7 +20,7 @@ const cardHeight = Math.round(width * 1.6);
           <Image source={require('../../assets/images/tinderLogo.png')} style={styles.brandLogo} resizeMode="contain" />
         </View>
       </View>
-          <ScrollView contentContainerStyle={[styles.scrollContent, { width: contentWidth, alignSelf: 'center' }]}>        
+          <ScrollView contentContainerStyle={[styles.scrollContent, { width: contentWidth, alignSelf: 'center' }]}>      
          {liked.length > 0 ? (
            liked.map((op: Opponent) => (
             <View key={op.id} style={styles.cardContainer}>           
@@ -28,7 +28,12 @@ const cardHeight = Math.round(width * 1.6);
              </View>
           ))
          ) : (
-           <View style={styles.emptyBox} />
+           <View style={[styles.cardContainer, { height: cardHeight }]}> 
+             <View style={styles.emptyCard}>
+               <MaterialIcons name="favorite-border" size={64} color="#bbb" />
+               <Text style={styles.emptyText}>There are no liked opponents yet.</Text>
+             </View>
+           </View>
          )}
        </ScrollView>
      
@@ -45,4 +50,6 @@ const styles = StyleSheet.create({
   floatingBar: { position: 'absolute', left: 0, right: 0 },
   scrollContent: { padding: 16, gap: 16 },
   emptyBox: { flex: 1 },
+  emptyCard: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', borderRadius: 16, borderWidth: 1, borderColor: '#e5e5ea' },
+  emptyText: { marginTop: 12, color: '#666', fontSize: 16, fontWeight: '600' },
 });
