@@ -19,13 +19,13 @@ export default function TabLayout() {
             onPress={() => navigation.navigate('main')}
             style={{ alignItems: 'center', justifyContent: 'center' }}
           >
-            <MaterialIcons name="whatshot" size={48} color="#ff6b6b" />
+            <MaterialIcons name="whatshot" size={48} color={isMainFocused ? '#ff6b6b' : '#b0b0b0'} />
           </Pressable>
           <Pressable
             onPress={() => navigation.navigate('likedOpponentList')}
             style={{ alignItems: 'center', justifyContent: 'center', position: 'relative' }}
           >
-            <MaterialIcons name="auto-awesome" size={48} color="#8aa4bd" />
+            <MaterialIcons name="auto-awesome" size={48} color={isLikedFocused ? '#ff6b6b' : '#b0b0b0'} />
           </Pressable>
         </View>
       </SafeAreaView>
