@@ -3,6 +3,14 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal"
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "BASE_URL": "http://3.26.31.166:8000"
+      }
     }
   }
 }
