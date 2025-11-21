@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "tinder-clone-mobile-app",
+    "name": "Tinder Clone Khrsman",
     "slug": "tinder-clone-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -26,6 +26,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-updates",
       [
         "expo-splash-screen",
         {
@@ -40,6 +41,15 @@
       ],
       "expo-font"
     ],
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/2e85d9e1-486a-49bf-9002-d57d26b1dab5"
+    },
+    "runtimeVersion": {
+      "policy": "nativeVersion"
+    },
     "experiments": {
       "typedRoutes": false
     },
