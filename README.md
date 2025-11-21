@@ -50,3 +50,10 @@ Tech & libraries
 - Vector Icons: Material icons for actions and tabs
 - Safe Area Context: consistent layout across devices
 - Atomic Design: Components are structured into atoms, molecules, and organisms
+
+
+Screenshots
+![Screenshot 1](assets/screenshots/screenshot1.png)
+![Screenshot 2](assets/screenshots/screenshot2.png)
+![Screenshot 3](assets/screenshots/screenshot3.png)
+![Screenshot 4](assets/screenshots/screenshot4.png)
