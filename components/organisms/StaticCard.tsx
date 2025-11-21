@@ -12,7 +12,7 @@ export function StaticCard({ opponent }: { opponent: Opponent }) {
   const cardHeight = Math.round(width * 1.3);
 
   return (
-    <View style={[styles.card]}>      
+    <View style={[styles.card, { height: cardHeight }]}>      
       <Image source={{ uri: opponent.photos[photoIdx] }} style={styles.image} resizeMode="cover" />
       <LinearGradient
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.9)']}
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     backgroundColor: '#000',
+    height:150
   },
   image: { width: '100%', height: '100%' },
   overlay: { position: 'absolute', bottom: 0, left: 0, right: 0 },
