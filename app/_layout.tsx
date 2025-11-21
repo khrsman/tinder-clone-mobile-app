@@ -13,7 +13,7 @@ import { Opponent, opponentsAtom } from '../state/recoil';
 const BASE_URL = process.env.BASE_URL ?? (Constants.expoConfig?.extra as any)?.BASE_URL as string;
 const url = `${BASE_URL}/api/people`; 
 
-type PeopleItem = { id: string; name: string; age: number; bio: string; distance: number; photos: string[] };
+type PeopleItem = { id: number; name: string; age: number; bio: string; distance: number; photos: string[] };
 function cleanUrl(u: string) { return u.trim().replace(/^[`'"\s]+|[`'"\s]+$/g, ''); }
 function mapToOpponents(items: PeopleItem[]): Opponent[] {
   return items.map((i) => ({ id: i.id, name: i.name, age: i.age, bio: i.bio, distanceKm: i.distance, photos: (i.photos||[]).map(cleanUrl), verified: false }));
